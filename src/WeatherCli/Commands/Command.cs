@@ -1,18 +1,22 @@
-﻿using WeatherApiWrapper.Core;
+﻿using McMaster.Extensions.CommandLineUtils;
+using WeatherApiWrapper.Core.Interfaces;
 
 namespace WeatherCli.Commands
 {
-    public abstract class Command : ICommand
+    public abstract class Command
     {
-        public Command(WeatherApiClient weatherApiClient)
+        public Command(
+            IWeatherApiClient weatherApiClient,
+            IConsole console)
         {
             WeatherApiClient = weatherApiClient;
+            Console = console;
         }
 
-        protected WeatherApiClient WeatherApiClient { get; }
+        protected IWeatherApiClient WeatherApiClient { get; }
 
-        public string Name { get; }
+        protected IConsole Console { get; }
 
-        public abstract void Execute(string[] args);
+        public abstract void OnExecute();
     }
 }

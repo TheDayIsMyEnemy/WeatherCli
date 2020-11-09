@@ -1,8 +1,8 @@
 {
   "profiles": {
     "WeatherCli": {
-      "commandName": "Project",
-      "commandLineArgs": "current 43.1208,25.6897"
+      "commandName": "Project"
+      //"commandLineArgs": "version"
     }
   }
 }

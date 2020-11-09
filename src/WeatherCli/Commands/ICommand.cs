@@ -4,6 +4,6 @@
     {
         public string Name { get; }
 
-        public void Execute(string[] args);
+        public void Execute();
     }
 }

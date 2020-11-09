@@ -1,33 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using McMaster.Extensions.CommandLineUtils;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using WeatherApiWrapper.Core;
+using WeatherApiWrapper.Core.Interfaces;
 using WeatherApiWrapper.Core.Models;
 
 namespace WeatherCli.Commands
 {
-    public class CurrentWeatherCommand : Command, ICommand
+    [Command(Name = "current", Description = "Get current weather information")]
+    [HelpOption()]
+    public class CurrentWeatherCommand : Command
     {
-        public CurrentWeatherCommand(WeatherApiClient weatherApiClient)
-            : base(weatherApiClient)
+        public CurrentWeatherCommand(
+            IWeatherApiClient weatherApiClient,
+            IConsole console)
+            : base(weatherApiClient, console)
         {
 
         }
 
-        public override void Execute(string[] args)
+        [Argument(0, "SearchQuery",
+            "Pass US Zipcode, UK Postcode, Canada Postalcode, IP address, Latitude/Longitude (decimal degree) or city name.")]
+        [Required]
+        public string CurrentWeatherSearchQuery { get; set; }
+
+        public override void OnExecute()
         {
             RealtimeWeatherResponse weather = WeatherApiClient
-                .GetRealtimeWeatherAsync(args[0])
+                .GetRealtimeWeatherAsync(CurrentWeatherSearchQuery)
                 .Result;
 
-            var locationString = GetPropertyInfoAsString(
+            var locationString = GetPropertyInformation(
                 weather.Location.GetType(),
                 weather.Location);
-            var conditionString = GetPropertyInfoAsString(
+            var conditionString = GetPropertyInformation(
                 weather.Current.Condition.GetType(),
                 weather.Current.Condition);
-            var currentWeatherString = GetPropertyInfoAsString(
+            var currentWeatherString = GetPropertyInformation(
                 weather.Current.GetType(),
                 weather.Current);
 
@@ -36,7 +46,7 @@ namespace WeatherCli.Commands
             Console.WriteLine(currentWeatherString);
         }
 
-        private string GetPropertyInfoAsString(Type type, object obj)
+        private string GetPropertyInformation(Type type, object obj)
         {
             var propertyInfo = type
                .GetProperties()
@@ -47,7 +57,7 @@ namespace WeatherCli.Commands
                     ? $"{prop.Name}: {propValue}"
                     : string.Empty;
                })
-               .Where(i => i != string.Empty)
+               .Where(i => !string.IsNullOrWhiteSpace(i))
                .ToList();
 
             var sb = new StringBuilder()
@@ -70,9 +80,11 @@ namespace WeatherCli.Commands
 
         private static string CenterText(string text)
         {
-            if (Console.WindowWidth > text.Length)
+            var windowWidth = System.Console.WindowWidth;
+
+            if (windowWidth > text.Length)
             {
-                string emptySpaces = new string(' ', (Console.WindowWidth - text.Length) / 2);
+                string emptySpaces = new string(' ', (windowWidth - text.Length) / 2);
                 return emptySpaces + text;
             }
 
