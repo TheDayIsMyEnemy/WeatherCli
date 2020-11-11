@@ -4,7 +4,7 @@ using McMaster.Extensions.CommandLineUtils;
 
 namespace WeatherCli.Commands
 {
-    [Command(Name = "version", Description = "Get current version of Weather CLI")]
+    [Command(Name = "version", Description = "Get current version of Weather CLI.")]
     public class VersionCommand
     {
         public void OnExecute()
