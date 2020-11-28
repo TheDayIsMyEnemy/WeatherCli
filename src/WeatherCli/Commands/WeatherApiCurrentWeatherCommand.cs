@@ -9,11 +9,11 @@ using WeatherCli.Options;
 namespace WeatherCli.Commands
 {
     [Command(Name = "current", Description = "Get current weather information.")]
-    public class CurrentWeatherCommand : Command
+    public class WeatherApiCurrentWeatherCommand : Command
     {
         private readonly IWritableOptions<CurrentWeatherCommandOptions> _options;
 
-        public CurrentWeatherCommand(
+        public WeatherApiCurrentWeatherCommand(
             IWeatherApiClient weatherApiClient,
             IConsole console,
             IWritableOptions<CurrentWeatherCommandOptions> options)
@@ -34,9 +34,6 @@ namespace WeatherCli.Commands
             if (string.IsNullOrWhiteSpace(SearchQuery))
             {
                 string defaultSearchQuery = _options.Value?.DefaultSearchQuery;
-
-                Console.WriteLine($"Default search query: '{defaultSearchQuery}'");
-
                 if (string.IsNullOrWhiteSpace(defaultSearchQuery))
                 {
                     Console.WriteLine("Search query is required.");
@@ -64,8 +61,6 @@ namespace WeatherCli.Commands
             {
                 _options.Update(o => o.DefaultSearchQuery = SearchQuery);
                 Console.WriteLine($"The default search query has been set to '{SearchQuery}'");
-
-                string defaultSearchQuery = _options.Value?.DefaultSearchQuery;
             }
 
             Console.WriteLine(locationString);
