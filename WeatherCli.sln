@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherCli", "src\WeatherCli\WeatherCli.csproj", "{47483FE7-523C-4C94-BF89-8DED25E18C0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherCli", "src\WeatherCli\WeatherCli.csproj", "{47483FE7-523C-4C94-BF89-8DED25E18C0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApiWrapper", "src\WeatherApiWrapper\WeatherApiWrapper.csproj", "{0CC35DE5-144B-4D0D-87B1-368A3822C0DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenWeatherMapApiWrapper", "src\OpenWeatherMapApiWrapper\OpenWeatherMapApiWrapper.csproj", "{7C14C519-134C-40B0-96E8-8BF4E0603EB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{0CC35DE5-144B-4D0D-87B1-368A3822C0DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CC35DE5-144B-4D0D-87B1-368A3822C0DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CC35DE5-144B-4D0D-87B1-368A3822C0DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C14C519-134C-40B0-96E8-8BF4E0603EB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C14C519-134C-40B0-96E8-8BF4E0603EB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C14C519-134C-40B0-96E8-8BF4E0603EB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C14C519-134C-40B0-96E8-8BF4E0603EB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
