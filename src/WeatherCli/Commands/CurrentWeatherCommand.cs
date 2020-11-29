@@ -1,29 +1,29 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
+using OpenWeatherMapApiWrapper;
 using System;
 using System.Linq;
 using System.Text;
-using WeatherApiWrapper.Core.Interfaces;
 using WeatherApiWrapper.Core.Models;
 using WeatherCli.Options;
 
 namespace WeatherCli.Commands
 {
     [Command(Name = "current", Description = "Get current weather information.")]
-    public class WeatherApiCurrentWeatherCommand : Command
+    public class CurrentWeatherCommand : Command
     {
         private readonly IWritableOptions<CurrentWeatherCommandOptions> _options;
 
-        public WeatherApiCurrentWeatherCommand(
-            IWeatherApiClient weatherApiClient,
+        public CurrentWeatherCommand(
+            IOpenWeatherMapApiClient openWeatherMapApiClient,
             IConsole console,
             IWritableOptions<CurrentWeatherCommandOptions> options)
-            : base(weatherApiClient, console)
+            : base(openWeatherMapApiClient, console)
         {
             _options = options;
         }
 
         [Argument(0, "SearchQuery",
-            "Pass US Zipcode, UK Postcode, Canada Postalcode, IP address, Latitude/Longitude (decimal degree) or city name.")]
+            "You can call by city name or city name, state code and country code. Please note that searching by states available only for the USA locations")]
         public string SearchQuery { get; set; }
 
         [Option("-d|--default", "Add a default search query.", CommandOptionType.NoValue)]
@@ -43,19 +43,20 @@ namespace WeatherCli.Commands
                 SearchQuery = defaultSearchQuery;
             }
 
-            RealtimeWeatherResponse weather = WeatherApiClient
-                .GetRealtimeWeatherAsync(SearchQuery)
-                .Result;
 
-            var locationString = GetPropertyInformation(
-                weather.Location.GetType(),
-                weather.Location);
-            var conditionString = GetPropertyInformation(
-                weather.Current.Condition.GetType(),
-                weather.Current.Condition);
-            var currentWeatherString = GetPropertyInformation(
-                weather.Current.GetType(),
-                weather.Current);
+            //RealtimeWeatherResponse weather = WeatherApiClient
+            //    .GetRealtimeWeatherAsync(SearchQuery)
+            //    .Result;
+
+            //var locationString = GetPropertyInformation(
+            //    weather.Location.GetType(),
+            //    weather.Location);
+            //var conditionString = GetPropertyInformation(
+            //    weather.Current.Condition.GetType(),
+            //    weather.Current.Condition);
+            //var currentWeatherString = GetPropertyInformation(
+            //    weather.Current.GetType(),
+            //    weather.Current);
 
             if (Default)
             {
@@ -63,9 +64,9 @@ namespace WeatherCli.Commands
                 Console.WriteLine($"The default search query has been set to '{SearchQuery}'");
             }
 
-            Console.WriteLine(locationString);
-            Console.WriteLine(conditionString);
-            Console.WriteLine(currentWeatherString);
+            //Console.WriteLine(locationString);
+            //Console.WriteLine(conditionString);
+            //Console.WriteLine(currentWeatherString);
         }
 
         private string GetPropertyInformation(Type type, object obj)

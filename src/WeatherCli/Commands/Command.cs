@@ -1,19 +1,19 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
-using WeatherApiWrapper.Core.Interfaces;
+using OpenWeatherMapApiWrapper;
 
 namespace WeatherCli.Commands
 {
     public abstract class Command
     {
         public Command(
-            IWeatherApiClient weatherApiClient,
+            IOpenWeatherMapApiClient openWeatherMapApiClient,
             IConsole console)
         {
-            WeatherApiClient = weatherApiClient;
+            OpenWeatherMapApiClient = openWeatherMapApiClient;
             Console = console;
         }
 
-        protected IWeatherApiClient WeatherApiClient { get; }
+        protected IOpenWeatherMapApiClient OpenWeatherMapApiClient { get; }
 
         protected IConsole Console { get; }
 

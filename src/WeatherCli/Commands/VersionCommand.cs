@@ -1,12 +1,18 @@
-﻿using System;
+﻿using McMaster.Extensions.CommandLineUtils;
 using System.Reflection;
-using McMaster.Extensions.CommandLineUtils;
 
 namespace WeatherCli.Commands
 {
     [Command(Name = "version", Description = "Get current version of Weather CLI.")]
     public class VersionCommand
     {
+        private readonly IConsole _console;
+
+        public VersionCommand(IConsole console)
+        {
+            _console = console;
+        }
+
         public void OnExecute()
         {
             string version = Assembly.GetEntryAssembly()
@@ -14,7 +20,7 @@ namespace WeatherCli.Commands
                                     .InformationalVersion
                                     .ToString();
 
-            Console.WriteLine(version);
+            _console.WriteLine(version);
         }
     }
 }
