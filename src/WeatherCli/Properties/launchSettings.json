@@ -2,7 +2,7 @@
   "profiles": {
     "WeatherCli": {
       "commandName": "Project",
-      "commandLineArgs": "current sofia -d"
+      "commandLineArgs": ""
     }
   }
 }

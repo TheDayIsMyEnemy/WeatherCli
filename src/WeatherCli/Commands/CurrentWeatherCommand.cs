@@ -1,14 +1,15 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using OpenWeatherMapApiWrapper;
 using System;
-using System.Linq;
-using System.Text;
-using WeatherApiWrapper.Core.Models;
+using System.Net;
+using System.Threading.Tasks;
 using WeatherCli.Options;
 
 namespace WeatherCli.Commands
 {
-    [Command(Name = "current", Description = "Get current weather information.")]
+    [Command(
+        Name = "current",
+        Description = "Get current weather data by city name")]
     public class CurrentWeatherCommand : Command
     {
         private readonly IWritableOptions<CurrentWeatherCommandOptions> _options;
@@ -22,84 +23,101 @@ namespace WeatherCli.Commands
             _options = options;
         }
 
-        [Argument(0, "SearchQuery",
-            "You can call by city name or city name, state code and country code. Please note that searching by states available only for the USA locations")]
-        public string SearchQuery { get; set; }
+        [Argument(0,
+            "CityName",
+            "You can call by city name or city name, state code and country code")]
+        public string CityName { get; set; }
 
-        [Option("-d|--default", "Add a default search query.", CommandOptionType.NoValue)]
+        [Option("-d|--default", "Sets a default city name", CommandOptionType.NoValue)]
         public bool Default { get; set; }
 
-        public override void OnExecute()
-        {
-            if (string.IsNullOrWhiteSpace(SearchQuery))
-            {
-                string defaultSearchQuery = _options.Value?.DefaultSearchQuery;
-                if (string.IsNullOrWhiteSpace(defaultSearchQuery))
-                {
-                    Console.WriteLine("Search query is required.");
-                    return;
-                }
+        [Option("-k|--apikey", "Sets an OpenWeatherMap API key", CommandOptionType.SingleValue)]
+        public string ApiKey { get; set; }
 
-                SearchQuery = defaultSearchQuery;
+        public override async Task<int> OnExecute()
+        {
+            if (!SetApiKey())
+            {
+                Console.WriteLine("API key is required");
+                return (int)CommandOutcome.Error;
             }
 
-
-            //RealtimeWeatherResponse weather = WeatherApiClient
-            //    .GetRealtimeWeatherAsync(SearchQuery)
-            //    .Result;
-
-            //var locationString = GetPropertyInformation(
-            //    weather.Location.GetType(),
-            //    weather.Location);
-            //var conditionString = GetPropertyInformation(
-            //    weather.Current.Condition.GetType(),
-            //    weather.Current.Condition);
-            //var currentWeatherString = GetPropertyInformation(
-            //    weather.Current.GetType(),
-            //    weather.Current);
+            if (string.IsNullOrWhiteSpace(CityName))
+            {
+                CityName = _options.Value?.DefaultCityName;
+                if (string.IsNullOrWhiteSpace(CityName))
+                {
+                    Console.WriteLine("City name is required");
+                    return (int)CommandOutcome.Error;
+                }
+            }
 
             if (Default)
             {
-                _options.Update(o => o.DefaultSearchQuery = SearchQuery);
-                Console.WriteLine($"The default search query has been set to '{SearchQuery}'");
+                _options.Update(o => o.DefaultCityName = CityName);
+                Console.WriteLine($"The default search city name has been set to '{CityName}'");
             }
 
-            //Console.WriteLine(locationString);
-            //Console.WriteLine(conditionString);
-            //Console.WriteLine(currentWeatherString);
-        }
+            var (currentWeatherData, statusCode) = await OpenWeatherMapApiClient.GetCurrentWeatherByCityNameAsync(CityName);
 
-        private string GetPropertyInformation(Type type, object obj)
-        {
-            var propertyInfo = type
-               .GetProperties()
-               .Select(prop =>
-               {
-                   var propValue = prop.GetValue(obj);
-                   return propValue.GetType() != typeof(Condition)
-                    ? $"{prop.Name}: {propValue}"
-                    : string.Empty;
-               })
-               .Where(i => !string.IsNullOrWhiteSpace(i))
-               .ToList();
-
-            var sb = new StringBuilder()
-                .AppendLine(CenterText(type.Name));
-
-            string currentLine = string.Empty;
-
-            for (int i = 0; i < propertyInfo.Count; i++)
+            if (currentWeatherData == null)
             {
-                currentLine += $"{propertyInfo[i]} | ";
-                if ((i + 1) % 3 == 0 || i == propertyInfo.Count - 1)
-                {
-                    sb.AppendLine(CenterText(currentLine.TrimEnd(new char[] { ' ', '|' })));
-                    currentLine = string.Empty;
-                }
+                Console.WriteLine($"Status code: {statusCode}");
+                return (int)CommandOutcome.Error;
             }
 
-            return sb.ToString();
+            return (int)CommandOutcome.Success;
         }
+
+        private bool SetApiKey()
+        {
+            ApiKey = string.IsNullOrWhiteSpace(ApiKey) ?
+                Environment.GetEnvironmentVariable(Constants.ApiKeyEnvironmentVariable, EnvironmentVariableTarget.User)
+                : ApiKey;
+
+            try
+            {
+                OpenWeatherMapApiClient.ApiKey = ApiKey;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return !String.IsNullOrWhiteSpace(ApiKey);
+        }
+
+        //private string GetPropertyInformation(Type type, object obj)
+        //{
+        //    var propertyInfo = type
+        //       .GetProperties()
+        //       .Select(prop =>
+        //       {
+        //           var propValue = prop.GetValue(obj);
+        //           return propValue.GetType() != typeof(Condition)
+        //            ? $"{prop.Name}: {propValue}"
+        //            : string.Empty;
+        //       })
+        //       .Where(i => !string.IsNullOrWhiteSpace(i))
+        //       .ToList();
+
+        //    var sb = new StringBuilder()
+        //        .AppendLine(CenterText(type.Name));
+
+        //    string currentLine = string.Empty;
+
+        //    for (int i = 0; i < propertyInfo.Count; i++)
+        //    {
+        //        currentLine += $"{propertyInfo[i]} | ";
+        //        if ((i + 1) % 3 == 0 || i == propertyInfo.Count - 1)
+        //        {
+        //            sb.AppendLine(CenterText(currentLine.TrimEnd(new char[] { ' ', '|' })));
+        //            currentLine = string.Empty;
+        //        }
+        //    }
+
+        //    return sb.ToString();
+        //}
 
         private static string CenterText(string text)
         {

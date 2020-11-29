@@ -1,13 +1,14 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using OpenWeatherMapApiWrapper;
+using System.Threading.Tasks;
 using WeatherCli.Options;
 
 namespace WeatherCli
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
             var services = new ServiceCollection();
 
@@ -24,7 +25,7 @@ namespace WeatherCli
                 .UseDefaultConventions()
                 .UseConstructorInjection(serviceProvider);
 
-            app.Execute(args);
+            return await app.ExecuteAsync(args);
         }
     }
 }

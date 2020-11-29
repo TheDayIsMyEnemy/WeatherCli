@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace OpenWeatherMapApiWrapper
     public class OpenWeatherMapApiClient : IOpenWeatherMapApiClient
     {
         private readonly HttpClient _httpClient;
-        private const string BaseAddress = "api.openweathermap.org/data/2.5/";
+        private const string BaseAddress = "http://api.openweathermap.org/data/2.5/";
         private string _apiKey;
 
         public OpenWeatherMapApiClient()
@@ -32,14 +33,16 @@ namespace OpenWeatherMapApiWrapper
             }
             set
             {
-                if (string.IsNullOrEmpty(value))
+                if (string.IsNullOrWhiteSpace(value))
                 {
                     throw new ArgumentException(nameof(value), $"{nameof(ApiKey)} cannot be null or empty");
                 }
+
+                _apiKey = value;
             }
         }
 
-        public async Task<CurrentWeatherData> GetCurrentWeatherByCityAsync(string cityName)
+        public async Task<(CurrentWeatherData, HttpStatusCode)> GetCurrentWeatherByCityNameAsync(string cityName)
         {
             CurrentWeatherData currentWeatherData = null;
             string requestUrl = $"weather?q={cityName}&appid={_apiKey}";
@@ -51,7 +54,7 @@ namespace OpenWeatherMapApiWrapper
                 currentWeatherData = JsonConvert.DeserializeObject<CurrentWeatherData>(responseBody);
             }
 
-            return currentWeatherData;
+            return (currentWeatherData, response.StatusCode);
         }
     }
 }

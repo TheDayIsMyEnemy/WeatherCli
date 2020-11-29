@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 
 namespace OpenWeatherMapApiWrapper
 {
     public interface IOpenWeatherMapApiClient
     {
-        Task<CurrentWeatherData> GetCurrentWeatherByCityAsync(string cityName);
+        string ApiKey { get; set; }
+
+        Task<(CurrentWeatherData, HttpStatusCode)> GetCurrentWeatherByCityNameAsync(string cityName);
     }
 }

@@ -2,6 +2,6 @@
 {
     public class CurrentWeatherCommandOptions
     {
-        public string DefaultSearchQuery { get; set; }
+        public string DefaultCityName { get; set; }
     }
 }

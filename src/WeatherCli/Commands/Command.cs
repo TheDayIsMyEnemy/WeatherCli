@@ -1,5 +1,6 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using OpenWeatherMapApiWrapper;
+using System.Threading.Tasks;
 
 namespace WeatherCli.Commands
 {
@@ -17,6 +18,6 @@ namespace WeatherCli.Commands
 
         protected IConsole Console { get; }
 
-        public abstract void OnExecute();
+        public abstract Task<int> OnExecute();
     }
 }
