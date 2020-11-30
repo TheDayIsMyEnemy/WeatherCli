@@ -1,7 +1,8 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using OpenWeatherMapApiWrapper;
 using System;
-using System.Net;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WeatherCli.Options;
 
@@ -23,10 +24,13 @@ namespace WeatherCli.Commands
             _options = options;
         }
 
+        public string CityName { get; set; }
+
+        // This is in case the city name has more than one word
         [Argument(0,
             "CityName",
             "You can call by city name or city name, state code and country code")]
-        public string CityName { get; set; }
+        public IEnumerable<string> CityNameArgs { get; set; }      
 
         [Option("-d|--default", "Sets a default city name", CommandOptionType.NoValue)]
         public bool Default { get; set; }
@@ -42,6 +46,7 @@ namespace WeatherCli.Commands
                 return (int)CommandOutcome.Error;
             }
 
+            CityName = string.Join(" ", CityNameArgs);
             if (string.IsNullOrWhiteSpace(CityName))
             {
                 CityName = _options.Value?.DefaultCityName;
@@ -58,22 +63,28 @@ namespace WeatherCli.Commands
                 Console.WriteLine($"The default search city name has been set to '{CityName}'");
             }
 
-            var (currentWeatherData, statusCode) = await OpenWeatherMapApiClient.GetCurrentWeatherByCityNameAsync(CityName);
-
-            if (currentWeatherData == null)
+            var (weatherData, statusCode) = await OpenWeatherMapApiClient.GetCurrentWeatherByCityNameAsync(CityName);
+            if (weatherData == null)
             {
                 Console.WriteLine($"Status code: {statusCode}");
                 return (int)CommandOutcome.Error;
             }
+
+            Console.WriteLine($"{weatherData.Weather[0].Main} {weatherData.Main.Temp}\u00B0C");
+            Console.WriteLine($"Feels like {weatherData.Main.FeelsLike}\u00B0C. {weatherData.Weather[0].Description}");
+            Console.WriteLine($"Wind {weatherData.Wind.Speed}m/s {Utils.ConvertDegreesToWindDirection(weatherData.Wind.Deg)}, " +
+                              $"{weatherData.Main.Pressure}hPa, Humidity: {weatherData.Main.Humidity}%");
+            Console.WriteLine($"Visibility: {weatherData.Visibility / 1000}km");
 
             return (int)CommandOutcome.Success;
         }
 
         private bool SetApiKey()
         {
-            ApiKey = string.IsNullOrWhiteSpace(ApiKey) ?
-                Environment.GetEnvironmentVariable(Constants.ApiKeyEnvironmentVariable, EnvironmentVariableTarget.User)
-                : ApiKey;
+            if (string.IsNullOrWhiteSpace(ApiKey))
+                ApiKey = Environment.GetEnvironmentVariable(Constants.ApiKeyEnvironmentVariable);
+            if (string.IsNullOrWhiteSpace(ApiKey) && Environment.OSVersion.Platform == PlatformID.Win32NT)
+                ApiKey = Environment.GetEnvironmentVariable(Constants.ApiKeyEnvironmentVariable, EnvironmentVariableTarget.User);
 
             try
             {
@@ -84,52 +95,7 @@ namespace WeatherCli.Commands
                 return false;
             }
 
-            return !String.IsNullOrWhiteSpace(ApiKey);
-        }
-
-        //private string GetPropertyInformation(Type type, object obj)
-        //{
-        //    var propertyInfo = type
-        //       .GetProperties()
-        //       .Select(prop =>
-        //       {
-        //           var propValue = prop.GetValue(obj);
-        //           return propValue.GetType() != typeof(Condition)
-        //            ? $"{prop.Name}: {propValue}"
-        //            : string.Empty;
-        //       })
-        //       .Where(i => !string.IsNullOrWhiteSpace(i))
-        //       .ToList();
-
-        //    var sb = new StringBuilder()
-        //        .AppendLine(CenterText(type.Name));
-
-        //    string currentLine = string.Empty;
-
-        //    for (int i = 0; i < propertyInfo.Count; i++)
-        //    {
-        //        currentLine += $"{propertyInfo[i]} | ";
-        //        if ((i + 1) % 3 == 0 || i == propertyInfo.Count - 1)
-        //        {
-        //            sb.AppendLine(CenterText(currentLine.TrimEnd(new char[] { ' ', '|' })));
-        //            currentLine = string.Empty;
-        //        }
-        //    }
-
-        //    return sb.ToString();
-        //}
-
-        private static string CenterText(string text)
-        {
-            int windowWidth = System.Console.WindowWidth;
-
-            if (windowWidth > text.Length)
-            {
-                string emptySpaces = new string(' ', (windowWidth - text.Length) / 2);
-                return emptySpaces + text;
-            }
-
-            return text;
+            return true;
         }
     }
 }

@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OpenWeatherMapApiWrapper\OpenWeatherMapApiWrapper.csproj" />
-    <ProjectReference Include="..\WeatherApiWrapper\WeatherApiWrapper.csproj" />
   </ItemGroup>
 
 </Project>

@@ -45,7 +45,23 @@ namespace OpenWeatherMapApiWrapper
         public async Task<(CurrentWeatherData, HttpStatusCode)> GetCurrentWeatherByCityNameAsync(string cityName)
         {
             CurrentWeatherData currentWeatherData = null;
-            string requestUrl = $"weather?q={cityName}&appid={_apiKey}";
+            string requestUrl = $"weather?q={cityName}&appid={_apiKey}&units=metric";
+
+            var response = await _httpClient.GetAsync(requestUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                string responseBody = await response.Content.ReadAsStringAsync();
+                currentWeatherData = JsonConvert.DeserializeObject<CurrentWeatherData>(responseBody);
+            }
+
+            return (currentWeatherData, response.StatusCode);
+        }
+
+        //List of city ID - http://bulk.openweathermap.org/sample/city.list.json.gz
+        public async Task<(CurrentWeatherData, HttpStatusCode)> GetCurrentWeatherByCityIdAsync(string cityId)
+        {
+            CurrentWeatherData currentWeatherData = null;
+            string requestUrl = $"weather?id={cityId}&appid={_apiKey}&units=metric";
 
             var response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
