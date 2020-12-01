@@ -1,10 +1,11 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using OpenWeatherMapApiWrapper;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WeatherCli.Options;
+using static WeatherCli.Constants;
 
 namespace WeatherCli.Commands
 {
@@ -26,7 +27,6 @@ namespace WeatherCli.Commands
 
         public string CityName { get; set; }
 
-        // This is in case the city name has more than one word
         [Argument(0,
             "CityName",
             "You can call by city name or city name, state code and country code")]
@@ -46,7 +46,7 @@ namespace WeatherCli.Commands
                 return (int)CommandOutcome.Error;
             }
 
-            CityName = string.Join(" ", CityNameArgs);
+            CityName = string.Join(" ", CityNameArgs ?? Enumerable.Empty<string>());
             if (string.IsNullOrWhiteSpace(CityName))
             {
                 CityName = _options.Value?.DefaultCityName;
@@ -60,21 +60,23 @@ namespace WeatherCli.Commands
             if (Default)
             {
                 _options.Update(o => o.DefaultCityName = CityName);
-                Console.WriteLine($"The default search city name has been set to '{CityName}'");
+                Console.WriteLine($"The default city name has been set to '{CityName}'");
             }
 
             var (weatherData, statusCode) = await OpenWeatherMapApiClient.GetCurrentWeatherByCityNameAsync(CityName);
             if (weatherData == null)
             {
-                Console.WriteLine($"Status code: {statusCode}");
+                Console.WriteLine($"Unable to fetch weather data. Status code: {(int)statusCode} {statusCode}");
                 return (int)CommandOutcome.Error;
             }
 
-            Console.WriteLine($"{weatherData.Weather[0].Main} {weatherData.Main.Temp}\u00B0C");
-            Console.WriteLine($"Feels like {weatherData.Main.FeelsLike}\u00B0C. {weatherData.Weather[0].Description}");
+            Console.WriteLine($"{weatherData.Name}");
+            Console.WriteLine($"{weatherData.Main.Temp}{DegreeSign} {weatherData.Main.TempMax}/{weatherData.Main.TempMin}{DegreeSign}");
+            Console.WriteLine($"Feels like {weatherData.Main.FeelsLike}{DegreeSign}. " +
+                              $"{string.Join(". ", weatherData.Weather.Select(w => w.Description.ToUpper()))}");
             Console.WriteLine($"Wind {weatherData.Wind.Speed}m/s {Utils.ConvertDegreesToWindDirection(weatherData.Wind.Deg)}, " +
                               $"{weatherData.Main.Pressure}hPa, Humidity: {weatherData.Main.Humidity}%");
-            Console.WriteLine($"Visibility: {weatherData.Visibility / 1000}km");
+            Console.WriteLine($"Visibility: {weatherData.Visibility / 1000.0}km");
 
             return (int)CommandOutcome.Success;
         }
@@ -82,9 +84,9 @@ namespace WeatherCli.Commands
         private bool SetApiKey()
         {
             if (string.IsNullOrWhiteSpace(ApiKey))
-                ApiKey = Environment.GetEnvironmentVariable(Constants.ApiKeyEnvironmentVariable);
+                ApiKey = Environment.GetEnvironmentVariable(ApiKeyEnvironmentVariable);
             if (string.IsNullOrWhiteSpace(ApiKey) && Environment.OSVersion.Platform == PlatformID.Win32NT)
-                ApiKey = Environment.GetEnvironmentVariable(Constants.ApiKeyEnvironmentVariable, EnvironmentVariableTarget.User);
+                ApiKey = Environment.GetEnvironmentVariable(ApiKeyEnvironmentVariable, EnvironmentVariableTarget.User);
 
             try
             {
