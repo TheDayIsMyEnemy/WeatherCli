@@ -1,7 +1,9 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using OpenWeatherMapApiWrapper;
+using System;
 using System.Threading.Tasks;
+using WeatherCli.Commands;
 using WeatherCli.Options;
 
 namespace WeatherCli
@@ -25,7 +27,15 @@ namespace WeatherCli
                 .UseDefaultConventions()
                 .UseConstructorInjection(serviceProvider);
 
-            return await app.ExecuteAsync(args);
+            try
+            {
+                return await app.ExecuteAsync(args);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return (int)CommandOutcome.Error;
+            }         
         }
     }
 }
