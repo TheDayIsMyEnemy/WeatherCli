@@ -1,13 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-	
-	<PackAsTool>true</PackAsTool>
-	<ToolCommandName>weather</ToolCommandName>
-	<PackageOutputPath>./nupkg</PackageOutputPath>
 
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>weather</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+
+    <Version>1.0.0</Version>
+    <Authors>TheDayIsMyEnemy</Authors>
+    <PackageTags>weather, weather-cli, cli, openweathermap</PackageTags>
+    <Description>Stupid simple Weather CLI. Gets weather data from OpenWeatherMap API</Description>
+    <Copyright>Copyright @2020 TheDayIsMyEnemy</Copyright>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/TheDayIsMyEnemy/WeatherCli</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TheDayIsMyEnemy/WeatherCli.git</RepositoryUrl>    
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,5 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OpenWeatherMapApiWrapper\OpenWeatherMapApiWrapper.csproj" />
   </ItemGroup>
+
+
 
 </Project>
