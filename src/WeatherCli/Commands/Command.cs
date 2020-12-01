@@ -18,6 +18,6 @@ namespace WeatherCli.Commands
 
         protected IConsole Console { get; }
 
-        public abstract Task<int> OnExecute();
+        public abstract Task<int> OnExecuteAsync();
     }
 }

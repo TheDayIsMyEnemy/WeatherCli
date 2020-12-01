@@ -12,6 +12,10 @@ namespace WeatherCli
     [Subcommand(typeof(VersionCommand))]
     public class App
     {
-        
+        public int OnExecute(CommandLineApplication app)
+        {
+            app.ShowHelp();
+            return (int)CommandOutcome.Success;
+        }
     }
 }

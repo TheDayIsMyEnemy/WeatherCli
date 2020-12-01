@@ -38,7 +38,7 @@ namespace WeatherCli.Commands
         [Option("-k|--apikey", "Sets an OpenWeatherMap API key", CommandOptionType.SingleValue)]
         public string ApiKey { get; set; }
 
-        public override async Task<int> OnExecute()
+        public override async Task<int> OnExecuteAsync()
         {
             if (!SetApiKey())
             {
