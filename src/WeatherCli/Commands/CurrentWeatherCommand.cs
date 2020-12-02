@@ -70,13 +70,13 @@ namespace WeatherCli.Commands
                 return (int)CommandOutcome.Error;
             }
 
+            var weather = weatherData.Weather.FirstOrDefault();
+
             Console.WriteLine($"{weatherData.Name}");
-            Console.WriteLine($"{weatherData.Main.Temp}{DegreeSign} {weatherData.Main.TempMax}/{weatherData.Main.TempMin}{DegreeSign}");
-            Console.WriteLine($"Feels like {weatherData.Main.FeelsLike}{DegreeSign}. " +
-                              $"{string.Join(". ", weatherData.Weather.Select(w => w.Description.ToUpper()))}");
-            Console.WriteLine($"Wind {weatherData.Wind.Speed}m/s {Utils.ConvertDegreesToWindDirection(weatherData.Wind.Deg)}, " +
-                              $"{weatherData.Main.Pressure}hPa, Humidity: {weatherData.Main.Humidity}%");
-            Console.WriteLine($"Visibility: {weatherData.Visibility / 1000.0}km");
+            Console.WriteLine($"{weather?.Main} {weatherData.Main.Temp}{DegreeSign}");
+            Console.WriteLine($"Feels like {Math.Round(weatherData.Main.FeelsLike, 0)}{DegreeSign}. {weather?.Description}");
+            Console.WriteLine($"Wind {weatherData.Wind.Speed:f1}m/s {Utils.ConvertDegreesToWindDirection(weatherData.Wind.Deg)}, "+               $"{weatherData.Main.Pressure}hPa, Humidity: {weatherData.Main.Humidity}%");
+            Console.WriteLine($"Visibility: {(weatherData.Visibility / 1000.0):f1}km");
 
             return (int)CommandOutcome.Success;
         }
