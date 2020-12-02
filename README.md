@@ -30,13 +30,13 @@ Options:
   -k|--apikey   Sets an OpenWeatherMap API key
 ```
 
-**Example using the current weather command:**
+Example using the current weather command:
 
 ```
 weather current sofia -k YOUR_API_KEY
 ```
 
-**Example of successful response:** 
+Example of successful response:
 > Sofia\
 Mist -2°C\
 Feels like -5°C. mist\
