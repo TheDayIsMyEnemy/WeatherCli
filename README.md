@@ -2,7 +2,7 @@
 
 A simple tool that allows you to get weather data using the [OpenWeatherMap](https://openweathermap.org) API.
 
-Shows the current Weather in your terminal.
+Displays the current Weather in your terminal.
 
 ## Installation
 
