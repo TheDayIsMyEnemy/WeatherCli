@@ -17,7 +17,7 @@ Get a free API key [here](https://openweathermap.org/appid).
 
 ## Usage
 
-#### Current weather command
+### Current weather command
 
 ```
 Usage: weather current [options] <CityName>
