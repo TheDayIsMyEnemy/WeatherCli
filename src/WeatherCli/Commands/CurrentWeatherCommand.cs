@@ -73,7 +73,7 @@ namespace WeatherCli.Commands
             var weather = weatherData.Weather.FirstOrDefault();
 
             Console.WriteLine($"{weatherData.Name}");
-            Console.WriteLine($"{weather?.Main} {weatherData.Main.Temp}{DegreeSign}");
+            Console.WriteLine($"{weather?.Main} {Math.Round(weatherData.Main.Temp)}{DegreeSign}");
             Console.WriteLine($"Feels like {Math.Round(weatherData.Main.FeelsLike, 0)}{DegreeSign}. {weather?.Description}");
             Console.WriteLine($"Wind {weatherData.Wind.Speed:f1}m/s {Utils.ConvertDegreesToWindDirection(weatherData.Wind.Deg)}, {weatherData.Main.Pressure}hPa, Humidity: {weatherData.Main.Humidity}%");
             Console.WriteLine($"Visibility: {(weatherData.Visibility / 1000.0):f1}km");
