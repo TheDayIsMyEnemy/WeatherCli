@@ -1,17 +1,19 @@
 # WeatherCli
 
-Simple tool that allows you to get weather data from the OpenWeatherMap API.
+A simple tool that allows you to get weather data using the [OpenWeatherMap](https://openweathermap.org) API.
 
-It shows the current Weather in your terminal.
+Shows the current Weather in your terminal.
 
 ## Installation
+
 Download .NET Core 3.1 SDK.
 Once installed, run this command:
 
 ```
 dotnet tool install -g weathercli
 ```
-Get a free API key at [https://openweathermap.org/appid](https://openweathermap.org/appid)
+
+Get a free API key [here](https://openweathermap.org/appid)
 
 ## Usage
 
@@ -33,12 +35,13 @@ Example using the current weather command:
 ```
 weather current sofia -k YOUR_API_KEY
 ```
+
 Example of successfull response: 
 > Sofia\
--5.29°C -0.56/-11°C\
-Feels like -8.83°C. FOG\
-Wind 1m/s ESE, 1023hPa, Humidity: 85%\
-Visibility: 0.25km
+Mist -2°C\
+Feels like -5°C. mist\
+Wind 1.0m/s N, 1021hPa, Humidity: 92%\
+Visibility: 2.8km
 
 Optionally, you can omit the API key.
 In order to do that, you have to set the environment variable.
