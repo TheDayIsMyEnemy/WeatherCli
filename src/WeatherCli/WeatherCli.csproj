@@ -11,7 +11,7 @@
     <Version>1.0.0</Version>
     <Authors>TheDayIsMyEnemy</Authors>
     <PackageTags>weather, weather-cli, cli, openweathermap</PackageTags>
-    <Description>Stupid simple Weather CLI. Gets weather data from OpenWeatherMap API</Description>
+    <Description>A simple tool that allows you to get weather data using the OpenWeatherMap API. Displays the current Weather in your terminal.</Description>
     <Copyright>Copyright @2020 TheDayIsMyEnemy</Copyright>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/TheDayIsMyEnemy/WeatherCli</PackageProjectUrl>
