@@ -1,6 +1,6 @@
 # WeatherCli
 
-Simple tool that allows you to get weather data from OpenWeatherMap API..
+Simple tool that allows you to get weather data from OpenWeatherMap API.
 
 It shows the current Weather in your terminal.
 
