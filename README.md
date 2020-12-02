@@ -6,14 +6,14 @@ Shows the current Weather in your terminal.
 
 ## Installation
 
-Download .NET Core 3.1 SDK.
+Download [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1).
 Once installed, run this command:
 
 ```
 dotnet tool install -g weathercli
 ```
 
-Get a free API key [here](https://openweathermap.org/appid)
+Get a free API key [here](https://openweathermap.org/appid).
 
 ## Usage
 
@@ -30,13 +30,13 @@ Options:
   -k|--apikey   Sets an OpenWeatherMap API key
 ```
 
-Example using the current weather command:
+**Example using the current weather command:**
 
 ```
 weather current sofia -k YOUR_API_KEY
 ```
 
-Example of successfull response: 
+**Example of successful response:** 
 > Sofia\
 Mist -2°C\
 Feels like -5°C. mist\
