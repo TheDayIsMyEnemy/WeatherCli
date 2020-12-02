@@ -1,6 +1,6 @@
 # WeatherCli
 
-Simple tool that allows you to get weather data from OpenWeatherMap API.
+Simple tool that allows you to get weather data from the OpenWeatherMap API.
 
 It shows the current Weather in your terminal.
 
@@ -15,6 +15,8 @@ Get a free API key at [https://openweathermap.org/appid](https://openweathermap.
 
 ## Usage
 
+#### Current weather command
+
 ```
 Usage: weather current [options] <CityName>
 
@@ -24,19 +26,18 @@ Arguments:
 Options:
   -d|--default  Sets a default city name
   -k|--apikey   Sets an OpenWeatherMap API key
-  -?|-h|--help  Show help information
 ```
 
-Example using current weather command:
+Example using the current weather command:
 
 ```
 weather current sofia -k YOUR_API_KEY
 ```
 Example of successfull response: 
-> Sofia
--5.29°C -0.56/-11°C
-Feels like -8.83°C. FOG, 
-Wind 1m/s ESE, 1023hPa, Humidity: 85%
+> Sofia\
+-5.29°C -0.56/-11°C\
+Feels like -8.83°C. FOG\
+Wind 1m/s ESE, 1023hPa, Humidity: 85%\
 Visibility: 0.25km
 
 Optionally, you can omit the API key.
