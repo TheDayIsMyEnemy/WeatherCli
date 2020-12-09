@@ -3,6 +3,7 @@ using OpenWeatherMapApiWrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using WeatherCli.Options;
 using static WeatherCli.Constants;
@@ -30,7 +31,7 @@ namespace WeatherCli.Commands
         [Argument(0,
             "CityName",
             "You can call by city name or city name, state code and country code")]
-        public IEnumerable<string> CityNameArgs { get; set; }      
+        public IEnumerable<string> CityNameArgs { get; set; }
 
         [Option("-d|--default", "Sets a default city name", CommandOptionType.NoValue)]
         public bool Default { get; set; }
@@ -46,15 +47,10 @@ namespace WeatherCli.Commands
                 return (int)CommandOutcome.Error;
             }
 
-            CityName = string.Join(" ", CityNameArgs ?? Enumerable.Empty<string>());
-            if (string.IsNullOrWhiteSpace(CityName))
+            if (!SetCityName())
             {
-                CityName = _options.Value?.DefaultCityName;
-                if (string.IsNullOrWhiteSpace(CityName))
-                {
-                    Console.WriteLine("City name is required");
-                    return (int)CommandOutcome.Error;
-                }
+                Console.WriteLine("City name is required");
+                return (int)CommandOutcome.Error;
             }
 
             if (Default)
@@ -63,20 +59,16 @@ namespace WeatherCli.Commands
                 Console.WriteLine($"The default city name has been set to '{CityName}'");
             }
 
-            var (weatherData, statusCode) = await OpenWeatherMapApiClient.GetCurrentWeatherByCityNameAsync(CityName);
+            var (weatherData, statusCode) = await OpenWeatherMapApiClient
+                .GetCurrentWeatherByCityNameAsync(CityName);
             if (weatherData == null)
             {
                 Console.WriteLine($"Unable to fetch weather data. Status code: {(int)statusCode} {statusCode}");
                 return (int)CommandOutcome.Error;
             }
 
-            var weather = weatherData.Weather.FirstOrDefault();
-
-            Console.WriteLine($"{weatherData.Name}");
-            Console.WriteLine($"{weather?.Main} {Math.Round(weatherData.Main.Temp)}{DegreeSign}");
-            Console.WriteLine($"Feels like {Math.Round(weatherData.Main.FeelsLike, 0)}{DegreeSign}. {weather?.Description}");
-            Console.WriteLine($"Wind {weatherData.Wind.Speed:f1}m/s {Utils.ConvertDegreesToWindDirection(weatherData.Wind.Deg)}, {weatherData.Main.Pressure}hPa, Humidity: {weatherData.Main.Humidity}%");
-            Console.WriteLine($"Visibility: {(weatherData.Visibility / 1000.0):f1}km");
+            var weatherStr = BuildWeatherResult(weatherData);
+            Console.WriteLine(weatherStr);
 
             return (int)CommandOutcome.Success;
         }
@@ -98,6 +90,36 @@ namespace WeatherCli.Commands
             }
 
             return true;
+        }
+
+        private bool SetCityName()
+        {
+            CityName = string.Join(" ", CityNameArgs ?? Enumerable.Empty<string>());
+            if (string.IsNullOrWhiteSpace(CityName))
+            {
+                CityName = _options.Value?.DefaultCityName;
+            }
+            return !string.IsNullOrWhiteSpace(CityName);
+        }
+
+        private string BuildWeatherResult(CurrentWeatherData weatherData)
+        {
+            var sb = new StringBuilder();
+
+            var weather = weatherData
+                .Weather
+                .FirstOrDefault();
+
+            sb.AppendLine(weatherData.Name);
+            sb.AppendLine($"{weather?.Main} {Math.Round(weatherData.Main.Temp)}{DegreeSign}");
+            sb.AppendLine($"Feels like {Math.Round(weatherData.Main.FeelsLike, 0)}{DegreeSign}." +
+                $" {weather?.Description}");
+            sb.AppendLine($"Wind {weatherData.Wind.Speed:f1}m/s" +
+                $" {Utils.ConvertDegreesToWindDirection(weatherData.Wind.Deg)}," +
+                $" {weatherData.Main.Pressure}hPa, Humidity: {weatherData.Main.Humidity}%");
+            sb.AppendLine($"Visibility: {(weatherData.Visibility / 1000.0):f1}km");
+
+            return sb.ToString();
         }
     }
 }
