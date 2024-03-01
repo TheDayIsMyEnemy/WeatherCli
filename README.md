@@ -1,25 +1,22 @@
 # WeatherCli
 
-A simple tool that allows you to get weather data using the [OpenWeatherMap](https://openweathermap.org) API.
-
-Displays the current Weather in your terminal.
+WeatherCli is a simple tool that allows you to retrieve weather data using the [OpenWeatherMap API](https://openweathermap.org), displaying the current weather in your terminal.
 
 ## Installation
 
-Download [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1).
-Once installed, run this command:
+To install WeatherCli, you need to download the [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0). Once installed, run the following command:
 
-```
+```bash
 dotnet tool install -g weathercli
 ```
 
-Get a free API key [here](https://openweathermap.org/appid).
+Obtain a free API key [here](https://openweathermap.org/appid).
 
 ## Usage
 
 ### Current weather command
 
-```
+```bash
 Usage: weather current [options] <CityName>
 
 Arguments:
@@ -32,7 +29,7 @@ Options:
 
 Example using the current weather command:
 
-```
+```bash
 weather current sofia -k YOUR_API_KEY
 ```
 
@@ -43,19 +40,18 @@ Feels like -5°C. mist\
 Wind 1.0m/s N, 1021hPa, Humidity: 92%\
 Visibility: 2.8km
 
-Optionally, you can omit the API key.
-In order to do that, you have to set the environment variable.
+Optionally, you can omit the API key. To do that, you need to set the environment variable.
 
-How to do it in Windows:
+Windows command:
 
-
-For the current process:
-```
-set OPENWEATHERMAP_APIKEY=YOUR_API_KEY
-```
-For the user:
-```
+```bash
 setx OPENWEATHERMAP_APIKEY YOUR_API_KEY
+```
+
+Linux command:
+
+```bash
+export OPENWEATHERMAP_APIKEY=YOUR_API_KEY
 ```
 
 ## Contribution

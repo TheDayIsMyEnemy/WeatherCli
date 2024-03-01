@@ -2,26 +2,26 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
 
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>weather</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
 
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Authors>TheDayIsMyEnemy</Authors>
     <PackageTags>weather, weather-cli, cli, openweathermap</PackageTags>
     <Description>A simple tool that allows you to get weather data using the OpenWeatherMap API. Displays the current Weather in your terminal.</Description>
-    <Copyright>Copyright @2020 TheDayIsMyEnemy</Copyright>
+    <Copyright>Copyright @2024 TheDayIsMyEnemy</Copyright>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/TheDayIsMyEnemy/WeatherCli</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/TheDayIsMyEnemy/WeatherCli.git</RepositoryUrl>    
+    <RepositoryUrl>https://github.com/TheDayIsMyEnemy/WeatherCli.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
